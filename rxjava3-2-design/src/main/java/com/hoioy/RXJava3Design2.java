@@ -6,17 +6,18 @@ import io.reactivex.rxjava3.core.ObservableEmitter;
 import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
+import sun.rmi.runtime.Log;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class RXJava3Design {
+public class RXJava3Design2 {
     public static void main(String[] args) {
         subscribe();
     }
 
     public static void subscribe() {
-        createObservable().subscribe(new Observer() {
+        createObservableByCreate().subscribe(new Observer() {
             @Override
             public void onSubscribe(@NonNull Disposable disposable) {
                 System.out.println(disposable.isDisposed());
@@ -39,15 +40,17 @@ public class RXJava3Design {
         });
     }
 
-    public static Observable createObservable() {
-        //just和from会异步触发订阅者的onNext()方法。每一个item都会被这个被观察者发送出去，最后会异步触发订阅者的onCompleted()方法。
-        Observable<String> o = Observable.fromArray("a", "b", "c");
-
-        List list = Arrays.asList(1, 2, 3, 4);
-        Observable<Integer> o1 = Observable.fromIterable(list);
-
-        Observable<String> o2 = Observable.just("one object");
-
-        return o;
+    public static Observable createObservableByCreate() {
+        return Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> observableEmitter) throws Throwable {
+            System.out.println("发送：：" + "hello");
+                observableEmitter.onNext("hello");
+                System.out.println("发送：：" + "world");
+                observableEmitter.onNext("world");
+                System.out.println("发送：：" + "onComplete");
+                observableEmitter.onComplete();
+            }
+        });
     }
 }
