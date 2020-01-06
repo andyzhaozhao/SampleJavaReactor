@@ -6,14 +6,16 @@ import io.reactivex.rxjava3.core.ObservableEmitter;
 import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Function;
 
 public class RXJava3Design3OtherOperators {
     public static void main(String[] args) {
         subscribe();
     }
+
     //4.使用操作符转换被观察者发送的数据.md
     public static void subscribe() {
-        createObservableByCreate().subscribe(new Observer() {
+        createObservableByCreate().skip(10).take(5).map(o -> "被修改的："+o).subscribe(new Observer() {
             @Override
             public void onSubscribe(@NonNull Disposable disposable) {
                 System.out.println(disposable.isDisposed());
@@ -40,11 +42,9 @@ public class RXJava3Design3OtherOperators {
         return Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<String> observableEmitter) throws Throwable {
-            System.out.println("发送：：" + "hello");
-                observableEmitter.onNext("hello");
-                System.out.println("发送：：" + "world");
-                observableEmitter.onNext("world");
-                System.out.println("发送：：" + "onComplete");
+                for (int i = 0; i < 50; i++) {
+                    observableEmitter.onNext("hello：" + i);
+                }
                 observableEmitter.onComplete();
             }
         });
