@@ -7,16 +7,15 @@ import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 
-import java.util.Arrays;
-import java.util.List;
+import java.io.IOException;
 
-public class RXJava3Error {
+public class RXJava3ErroronErrorReturnItem {
     public static void main(String[] args) {
         subscribe();
     }
 
-    public static void subscribe() {
-        createObservable().subscribe(new Observer() {
+    private static void subscribe() {
+        createObservableByCreate().onErrorReturnItem(100).subscribe(new Observer() {
             @Override
             public void onSubscribe(@NonNull Disposable disposable) {
                 System.out.println(disposable.isDisposed());
@@ -39,15 +38,20 @@ public class RXJava3Error {
         });
     }
 
-    public static Observable createObservable() {
-        //just和from会异步触发订阅者的onNext()方法。每一个item都会被这个被观察者发送出去，最后会异步触发订阅者的onCompleted()方法。
-        Observable<String> o = Observable.fromArray("a", "b", "c");
+    public static Observable createObservableByCreate() {
+        return Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> observableEmitter) throws Throwable {
+                observableEmitter.onNext("hello");
+                observableEmitter.onNext("world");
 
-        List list = Arrays.asList(1, 2, 3, 4);
-        Observable<Integer> o1 = Observable.fromIterable(list);
+                observableEmitter.onError(new IOException("发生了IO异常"));
 
-        Observable<String> o2 = Observable.just("one object");
+                observableEmitter.onNext("1");
+                observableEmitter.onNext("2");
 
-        return o;
+                observableEmitter.onComplete();
+            }
+        });
     }
 }
