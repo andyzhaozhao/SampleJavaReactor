@@ -26,5 +26,6 @@
         <module>rxjava3-1-helloworld</module>
         <module>rxjava3-2-design</module>
         <module>rxjava3-3-error</module>
+        <module>rxjava3-4-use</module>
     </modules>
 </project>
