@@ -27,5 +27,7 @@
         <module>rxjava3-2-design</module>
         <module>rxjava3-3-error</module>
         <module>rxjava3-4-use</module>
+        <module>rxjava3-5-scheduler</module>
+        <module>rxjava3-6-use2</module>
     </modules>
 </project>
